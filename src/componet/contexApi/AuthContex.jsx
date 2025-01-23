@@ -10,8 +10,6 @@ import {
 import React, { createContext, useEffect, useState } from "react";
 import app from "../firebase/firebase.config";
 
-
-
 //export authcontex
 export const UserContex = createContext({});
 //end export
@@ -22,7 +20,7 @@ const AuthContex = ({ children }) => {
   // from chatgpt
   //for user
   const [user, setUser] = useState({}); // Tracks the currently signed-in user
-  // const [loading, setLoading] = useState(true); // Tracks loading state for authentication
+  const [loading, setLoading] = useState(true); // Tracks loading state for authentication
   // chatgpt
   console.log(user);
   //for user signIn activation
@@ -35,7 +33,7 @@ const AuthContex = ({ children }) => {
     return () => unsubscribe(); // Clean up the listener when the component unmounts
   }, [auth]);
   // chatgpt end
-//for user create with email,password and name
+  //for user create with email,password and name
   const createUser = (email, password) => {
     return createUserWithEmailAndPassword(auth, email, password);
   };
@@ -45,10 +43,9 @@ const AuthContex = ({ children }) => {
   };
   //signIN with google
   const HandleSignWithGoogle = () => {
-    const provider = new GoogleAuthProvider()
-  return signInWithPopup(auth, provider)
-   
-  }
+    const provider = new GoogleAuthProvider();
+    return signInWithPopup(auth, provider);
+  };
   //now it will be work on login.jsx
   //for logOut
   const HandleSignOut = () => {
@@ -56,11 +53,12 @@ const AuthContex = ({ children }) => {
       .then(() => {})
       .catch(() => {});
   };
-//for sending data by useing contex
+  //for sending data by useing contex
   const userInfo = {
     createUser,
     singIn,
     user,
+    loading,
     HandleSignOut,
     HandleSignWithGoogle,
   };
