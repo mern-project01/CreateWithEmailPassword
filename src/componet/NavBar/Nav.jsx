@@ -11,7 +11,7 @@ const Nav = () => {
                 
             </li>
             <li>
-                <Link to="/privetrout">{user?.displayName} </Link>
+                <Link to="/about">{user?.displayName || user ? 'About':''} </Link>
                 
             </li>
             <li>
