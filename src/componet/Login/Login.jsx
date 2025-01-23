@@ -1,14 +1,12 @@
-import { getAuth, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import React from "react";
+import React, { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
-import app from "../firebase/firebase.config";
-import { FacebookAuthProvider } from "firebase/auth";
+import { UserContex } from "../contexApi/AuthContex";
 
 const Login = () => {
 
-  const auth = getAuth(app);
-
-const provider = new FacebookAuthProvider();
+  const { singIn, HandleSignWithGoogle } = useContext(UserContex);
+  const [error, setError] = useState('')
+  const [showPassword,setShowPassowrd]=useState(false)
 
   const handleLogin = (event) => {
     event.preventDefault();
@@ -16,49 +14,35 @@ const provider = new FacebookAuthProvider();
     const email = form.email.value;
     const password = form.password.value;
     const text = "password:";
-    // console.log(email,text, password);
-    signInWithEmailAndPassword(auth, email, password)
+// console.log(email,text, password);
+    singIn(email,password)
       .then((result) => {
         const user = result.user;
-        console.log("sucsessfull");
-        console.log(user);
+        // console.log("sucsessfull");
+        // console.log(user);
+        alert("login sucsessfully")
+        form.reset();
       })
-      .catch((rr) => {
-        console.log(rr);
+      .catch((err) => {
+        // console.log(rr);
+        setError(err)
       });
   };
-  const facebook = () => {
-    // console.log("facebook");
-
-
-    signInWithPopup(auth, provider)
+  const handleGoogle= () => {
+    HandleSignWithGoogle()
       .then((result) => {
-        // The signed-in user info.
-        const user = result.user;
-
-        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-        const credential = FacebookAuthProvider.credentialFromResult(result);
-        const accessToken = credential.accessToken;
-
-        // IdP data available using getAdditionalUserInfo(result)
-        // ...
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = FacebookAuthProvider.credentialFromError(error);
-
-        // ...
-      });
-    
+         const googleUser = result.user;
+         // setUser(user)
+         alert("login sucsesfull", googleUser?.displayName);
+       }).catch((error) => {
+         setError(error);
+       });
   }
+ 
   return (
+    
     <div>
-      <h1 className="text-5xl text-center  text-yellow-600">Login</h1>
+      <h1 className="text-5xl text-center pt-3 bg-base-100 text-yellow-600">Login  </h1>
       <div className="hero bg-base-200 min-h-screen">
         <div className="hero-content ">
           <div className="card bg-base-100 w-[480px]  shrink-0 shadow-2xl">
@@ -80,7 +64,7 @@ const provider = new FacebookAuthProvider();
                   <span className="label-text">Password</span>
                 </label>
                 <input
-                  type="password"
+                  type={showPassword ? "text":"password"}
                   placeholder="password"
                   name="password"
                   className="input input-bordered"
@@ -88,6 +72,7 @@ const provider = new FacebookAuthProvider();
                 />
                 <label>
                   <NavLink to="">forget password</NavLink>
+                  {error && <p className="text-red-600"> {error} </p>}
                 </label>
               </div>
               <div className="form-control mt-6">
@@ -97,7 +82,9 @@ const provider = new FacebookAuthProvider();
               </div>
             </form>
           </div>
-                <button onClick={facebook} className="btn btn-accent">Login with facebook</button>
+          <button onClick={handleGoogle} className="btn btn-accent">
+            Login with Google
+          </button>
         </div>
       </div>
     </div>

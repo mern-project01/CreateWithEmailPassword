@@ -1,34 +1,46 @@
-import React from "react";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import app from "../firebase/firebase.config";
+import React, { useContext, useState } from "react";
+import { UserContex } from "../contexApi/AuthContex";
 
 const SignUp = () => {
-  const auth=getAuth(app)
+  const{createUser,user,loading}=useContext(UserContex)
+  // const [user,setUser]=useState({})
+  const [err, setErr] = useState('');
   const handleSignUp = (event) => {
     event.preventDefault();
     const form = event.target;
     const name = form.name.value;
     const email = form.email.value;
     const password = form.password.value;
-    const text = "password:";
-    console.log(name, email, text, password);
-    createUserWithEmailAndPassword(auth,email,password)
-      .then((result) => {
-        const createUser = result.user;
-        console.log(createUser)
-      }).catch ((error) => {
-        console.log(error)
-      })
+    if (!/(?=.*[A-Z])/.test(password)) {
+     setErr("must use a capital letter")
+    
+   } else {
+     setErr("");
+
+     createUser(email, password)
+       .then((result) => {
+         const createUser = result.user;
+         // console.log(createUser)
+         alert("Create Account sucsessfull");
+         form.reset();
+       })
+       .catch((error) => {
+         console.log(error);
+         setErr(error.message);
+       });
+   }
   };
   return (
-    <div>
+
+   
+      <div>
       <div className="hero bg-base-200 min-h-screen">
         <div className="hero-content ">
           <div className="card bg-base-100 w-[480px]  shrink-0 shadow-2xl">
             <form onSubmit={handleSignUp} className="card-body">
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text">Name</span>
+                  <span className="label-text">Name  </span>
                 </label>
                 <input
                   type="text"
@@ -61,6 +73,7 @@ const SignUp = () => {
                   className="input input-bordered"
                   required
                 />
+                {err && <p className="text-red-500">{err} </p>}
               </div>
               <div className="form-control mt-6">
                 <button type="submit" className="btn btn-primary">
@@ -71,7 +84,9 @@ const SignUp = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div>  
+       
+  
   );
 };
 

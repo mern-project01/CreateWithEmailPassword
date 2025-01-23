@@ -1,11 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { UserContex } from '../contexApi/AuthContex';
 
 const Nav = () => {
+  const {user,HandleSignOut}=useContext(UserContex)
     const UlItem = (
         <>
             <li>
                 <Link to="/">Home</Link>
+                
+            </li>
+            <li>
+                <Link to="/privetrout">{user?.displayName} </Link>
                 
             </li>
             <li>
@@ -47,17 +53,52 @@ const Nav = () => {
                 tabIndex={0}
                 className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
               >
-               {UlItem}
+                {UlItem}
               </ul>
             </div>
             <a className="btn btn-ghost text-xl">Auth with input</a>
           </div>
           <div className="navbar-center hidden lg:flex">
-            <ul className="menu menu-horizontal px-1">
-            {UlItem}
-            </ul>
+            <ul className="menu menu-horizontal px-1">{UlItem}</ul>
           </div>
-          
+
+          <div className="navebar-end">
+            <div className="dropdown dropdown-end">
+              <div
+                tabIndex={0}
+                role="button"
+                className="btn btn-ghost btn-circle avatar"
+              >
+                <div className="w-10 rounded-full">
+                  <img
+                    alt="Tailwind CSS Navbar component"
+                    src={
+                      user?.photoURL
+                        ? user.photoURL
+                        : "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                    }
+                  />
+                </div>
+              </div>
+              <ul
+                tabIndex={0}
+                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+              >
+                <li>
+                  <a className="justify-between">
+                    {user?.displayName}
+                    <span className="badge">New</span>
+                  </a>
+                </li>
+                <li>
+                  <a>{user?.email} </a>
+                </li>
+                <li>
+                  <button onClick={HandleSignOut}>Logout</button>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     );
