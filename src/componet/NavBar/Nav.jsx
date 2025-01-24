@@ -87,7 +87,9 @@ const Nav = () => {
                 <li>
                   <a className="justify-between">
                     {user?.displayName}
-                    <span className="badge">New</span>
+                    <span className="badge">
+                      {user?.emailVerified ? "Verified" : "Not Verified"}{" "}
+                    </span>
                   </a>
                 </li>
                 <li>

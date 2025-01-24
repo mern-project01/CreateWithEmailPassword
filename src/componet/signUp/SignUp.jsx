@@ -2,9 +2,9 @@ import React, { useContext, useState } from "react";
 import { UserContex } from "../contexApi/AuthContex";
 
 const SignUp = () => {
-  const{createUser,user,loading}=useContext(UserContex)
+  const { createUser, handleUpdate, user, loading } = useContext(UserContex);
   // const [user,setUser]=useState({})
-  const [err, setErr] = useState('');
+  const [err, setErr] = useState("");
   const handleSignUp = (event) => {
     event.preventDefault();
     const form = event.target;
@@ -12,35 +12,34 @@ const SignUp = () => {
     const email = form.email.value;
     const password = form.password.value;
     if (!/(?=.*[A-Z])/.test(password)) {
-     setErr("must use a capital letter")
-    
-   } else {
-     setErr("");
+      setErr("must use a capital letter");
+    } else {
+      setErr("");
 
-     createUser(email, password)
-       .then((result) => {
-         const createUser = result.user;
-         // console.log(createUser)
-         alert("Create Account sucsessfull");
-         form.reset();
-       })
-       .catch((error) => {
-         console.log(error);
-         setErr(error.message);
-       });
-   }
+      createUser(email, password)
+        .then((result) => {
+          const createUser = result.user;
+          // console.log(createUser)
+
+          handleUpdate(name);
+          form.reset();
+          alert("Create Account sucsessfull");
+        })
+        .catch((error) => {
+          console.log(error);
+          setErr(error.message);
+        });
+    }
   };
   return (
-
-   
-      <div>
+    <div>
       <div className="hero bg-base-200 min-h-screen">
         <div className="hero-content ">
           <div className="card bg-base-100 w-[480px]  shrink-0 shadow-2xl">
             <form onSubmit={handleSignUp} className="card-body">
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text">Name  </span>
+                  <span className="label-text">Name </span>
                 </label>
                 <input
                   type="text"
@@ -84,9 +83,7 @@ const SignUp = () => {
           </div>
         </div>
       </div>
-    </div>  
-       
-  
+    </div>
   );
 };
 

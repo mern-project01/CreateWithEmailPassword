@@ -4,9 +4,11 @@ import { UserContex } from "../contexApi/AuthContex";
 
 const Login = () => {
 
-  const { singIn, HandleSignWithGoogle } = useContext(UserContex);
+  const { singIn, HandleSignWithGoogle, forgetPassword } =
+    useContext(UserContex);
   const [error, setError] = useState('')
-  const [showPassword,setShowPassowrd]=useState(false)
+  const [showPassword, setShowPassowrd] = useState(false)
+  const [Email,setEmail]=useState('')
 
   const handleLogin = (event) => {
     event.preventDefault();
@@ -20,14 +22,41 @@ const Login = () => {
         const user = result.user;
         // console.log("sucsessfull");
         // console.log(user);
-        alert("login sucsessfully")
         form.reset();
+        alert("login sucsessfully")
       })
       .catch((err) => {
         // console.log(rr);
         setError(err)
       });
   };
+  const handleOnBlur = (event) => {
+    const email = event.target.value;
+    setEmail(email)
+    console.log(Email)
+   
+      
+    
+    
+  }
+  const HandlePassReset = () => {
+    if (!Email) {
+      alert("Please filup the email name:")
+      return
+    }
+    forgetPassword(Email)
+     .then(() => {
+            // Password reset email sent!
+       // ..
+       
+       alert("chake email")
+          })
+          .catch((error) => {
+            
+          });
+    
+  }
+  
   const handleGoogle= () => {
     HandleSignWithGoogle()
       .then((result) => {
@@ -40,9 +69,10 @@ const Login = () => {
   }
  
   return (
-    
     <div>
-      <h1 className="text-5xl text-center pt-3 bg-base-100 text-yellow-600">Login  </h1>
+      <h1 className="text-5xl text-center pt-3 bg-base-100 text-yellow-600">
+        Login{" "}
+      </h1>
       <div className="hero bg-base-200 min-h-screen">
         <div className="hero-content ">
           <div className="card bg-base-100 w-[480px]  shrink-0 shadow-2xl">
@@ -57,6 +87,7 @@ const Login = () => {
                   name="email"
                   className="input input-bordered"
                   required
+                  onBlur={handleOnBlur}
                 />
               </div>
               <div className="form-control">
@@ -64,14 +95,19 @@ const Login = () => {
                   <span className="label-text">Password</span>
                 </label>
                 <input
-                  type={showPassword ? "text":"password"}
+                  type={showPassword ? "text" : "password"}
                   placeholder="password"
                   name="password"
                   className="input input-bordered"
                   required
                 />
                 <label>
-                  <NavLink to="">forget password</NavLink>
+                  <button
+                    onClick={HandlePassReset}
+                    className="label-text-alt link link-hover"
+                  >
+                    forget password
+                  </button>
                   {error && <p className="text-red-600"> {error} </p>}
                 </label>
               </div>
